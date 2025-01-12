@@ -30,7 +30,7 @@ function Productos() {
 
     // Cargar productos desde el backend
     useEffect(() => {
-        fetch('http://192.168.1.33:5000/productos')
+        fetch('http://localhost:5002/productos')
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch((error) => console.error('Error:', error));
@@ -61,7 +61,7 @@ function Productos() {
     const handleSave = () => {
         const nuevoProducto = { nombre, precio: parseFloat(precio) };
         if (editando) {
-            fetch(`http://192.168.1.33:5000/productos/${editando.id}`, {
+            fetch(`http://localhost:5002/productos/${editando.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevoProducto),
@@ -73,7 +73,7 @@ function Productos() {
                 })
                 .catch((error) => console.error('Error:', error));
         } else {
-            fetch('http://192.168.1.33:5000/productos', {
+            fetch('http://localhost:5002/productos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevoProducto),
@@ -89,7 +89,7 @@ function Productos() {
 
     // Eliminar un producto
     const handleDelete = (id) => {
-        fetch(`http://192.168.1.33:5000/productos/${id}`, {
+        fetch(`http://localhost:5002/productos/${id}`, {
             method: 'DELETE',
         })
             .then(() => {

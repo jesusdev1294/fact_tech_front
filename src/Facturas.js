@@ -11,7 +11,7 @@ function Facturas() {
     const [editando, setEditando] = useState(null);
 
     useEffect(() => {
-        fetch('http://192.168.1.33:5000/facturas')
+        fetch('http://localhost:5002/facturas')
             .then((response) => response.json())
             .then((data) => setFacturas(data))
             .catch((error) => console.error('Error:', error));
@@ -40,7 +40,7 @@ function Facturas() {
     const handleSave = () => {
         const nuevaFactura = { cliente, total: parseFloat(total) };
         if (editando) {
-            fetch(`http://192.168.1.33:5000/facturas/${editando.id}`, {
+            fetch(`http://localhost:5002/facturas/${editando.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevaFactura),
@@ -52,7 +52,7 @@ function Facturas() {
                 })
                 .catch((error) => console.error('Error:', error));
         } else {
-            fetch('http://192.168.1.33:5000/facturas', {
+            fetch('http://localhost:5002/facturas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevaFactura),
@@ -67,7 +67,7 @@ function Facturas() {
     };
 
     const handleDelete = (id) => {
-        fetch(`http://192.168.1.33:5000/facturas/${id}`, {
+        fetch(`http://localhost:5002/facturas/${id}`, {
             method: 'DELETE',
         })
             .then(() => {

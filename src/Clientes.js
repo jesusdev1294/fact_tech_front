@@ -30,7 +30,7 @@ function Clientes() {
 
     // Cargar clientes desde el backend
     useEffect(() => {
-        fetch('http://192.168.1.33:5000/clientes')
+        fetch('http://localhost:5002/clientes')
             .then((response) => response.json())
             .then((data) => setClientes(data))
             .catch((error) => console.error('Error:', error));
@@ -61,7 +61,7 @@ function Clientes() {
     const handleSave = () => {
         const nuevoCliente = { nombre, email };
         if (editando) {
-            fetch(`http://192.168.1.33:5000/clientes/${editando.id}`, {
+            fetch(`http://localhost:5002/clientes/${editando.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevoCliente),
@@ -73,7 +73,7 @@ function Clientes() {
                 })
                 .catch((error) => console.error('Error:', error));
         } else {
-            fetch('http://192.168.1.33:5000/clientes', {
+            fetch('http://localhost:5002/clientes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevoCliente),
@@ -89,7 +89,7 @@ function Clientes() {
 
     // Eliminar un cliente
     const handleDelete = (id) => {
-        fetch(`http://192.168.1.33:5000/clientes/${id}`, {
+        fetch(`http://localhost:5002/clientes/${id}`, {
             method: 'DELETE',
         })
             .then(() => {
