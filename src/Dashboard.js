@@ -1,54 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, Paper, Card, CardContent } from '@mui/material';
-import { AttachMoney, Receipt, People } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Box, Typography, Grid, Paper } from '@mui/material';
+import { Pie } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    ArcElement,
+    Tooltip,
+    Legend
+} from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Dashboard() {
-    const [facturas, setFacturas] = useState([]);
-    const [clientes, setClientes] = useState([]);
-    const [hora, setHora] = useState('');
-    const [precioVES, setPrecioVES] = useState(null);
-
-    // Función para obtener la hora actual
-    const actualizarHora = () => {
-        const fecha = new Date();
-        const opciones = { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        const horaFormateada = fecha.toLocaleTimeString('es-VE', opciones);
-        setHora(horaFormateada);
+    const pieData = {
+        labels: ['Ingresos', 'Facturas', 'Clientes'],
+        datasets: [
+            {
+                data: [12345, 45, 32],
+                backgroundColor: ['#4caf50', '#2196f3', '#ff9800'],
+            },
+        ],
     };
-
-    // Función para obtener el precio del dólar en VES
-    const obtenerPrecioVES = async () => {
-        try {
-            const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-            const data = await response.json();
-            const precio = data.rates.VES.toFixed(2);
-            setPrecioVES(precio);
-        } catch (error) {
-            console.error('Error obteniendo el precio VES:', error);
-        }
-    };
-
-    // Obtener datos del backend
-    useEffect(() => {
-        fetch('http://localhost:5002/facturas')
-            .then((response) => response.json())
-            .then((data) => setFacturas(data))
-            .catch((error) => console.error('Error:', error));
-
-        fetch('http://localhost:5002/clientes')
-            .then((response) => response.json())
-            .then((data) => setClientes(data))
-            .catch((error) => console.error('Error:', error));
-
-        obtenerPrecioVES();
-        actualizarHora();
-        const interval = setInterval(actualizarHora, 1000);
-
-        return () => clearInterval(interval);
-    }, []);
-
-    const totalIngresos = facturas.reduce((sum, factura) => sum + factura.total, 0);
 
     return (
         <Box sx={{ padding: '20px' }}>
@@ -56,68 +27,33 @@ function Dashboard() {
                 Bienvenido a FortFact
             </Typography>
 
-            {/* Mostrar fecha y hora */}
-            <Typography variant="h6">Fecha: {new Date().toLocaleDateString('es-VE')}</Typography>
-            <Typography variant="h6">Hora: {hora}</Typography>
+            <Grid container spacing={3}>
+                <Grid item xs={12} sm={4}>
+                    <Paper sx={{ padding: '20px', textAlign: 'center', backgroundColor: '#f5f5f5' }}>
+                        <Typography variant="h6">Total Ingresos</Typography>
+                        <Typography variant="h4" sx={{ color: '#4caf50' }}>$12,345</Typography>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Paper sx={{ padding: '20px', textAlign: 'center', backgroundColor: '#f5f5f5' }}>
+                        <Typography variant="h6">Facturas Emitidas</Typography>
+                        <Typography variant="h4" sx={{ color: '#2196f3' }}>45</Typography>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Paper sx={{ padding: '20px', textAlign: 'center', backgroundColor: '#f5f5f5' }}>
+                        <Typography variant="h6">Clientes Registrados</Typography>
+                        <Typography variant="h4" sx={{ color: '#ff9800' }}>32</Typography>
+                    </Paper>
+                </Grid>
+            </Grid>
 
-            {/* Mostrar precio del dólar en VES */}
-            <Typography variant="h6" sx={{ marginTop: '10px', color: '#1976d2' }}>
-                Precio VES: {precioVES ? `${precioVES} Bs por USD` : 'Cargando...'}
-            </Typography>
-
-            {/* Tarjetas de resumen */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
-                <Card sx={{ minWidth: 200, backgroundColor: '#1976d2', color: 'white', borderRadius: '12px', boxShadow: 3 }}>
-                    <CardContent>
-                        <Typography variant="h6" component="div" gutterBottom>
-                            <Receipt sx={{ fontSize: 40, verticalAlign: 'middle', marginRight: '10px' }} />
-                            Facturas
-                        </Typography>
-                        <Typography variant="h4">{facturas.length}</Typography>
-                    </CardContent>
-                </Card>
-
-                <Card sx={{ minWidth: 200, backgroundColor: '#4caf50', color: 'white', borderRadius: '12px', boxShadow: 3 }}>
-                    <CardContent>
-                        <Typography variant="h6" component="div" gutterBottom>
-                            <People sx={{ fontSize: 40, verticalAlign: 'middle', marginRight: '10px' }} />
-                            Clientes
-                        </Typography>
-                        <Typography variant="h4">{clientes.length}</Typography>
-                    </CardContent>
-                </Card>
-
-                <Card sx={{ minWidth: 200, backgroundColor: '#ff9800', color: 'white', borderRadius: '12px', boxShadow: 3 }}>
-                    <CardContent>
-                        <Typography variant="h6" component="div" gutterBottom>
-                            <AttachMoney sx={{ fontSize: 40, verticalAlign: 'middle', marginRight: '10px' }} />
-                            Ingresos
-                        </Typography>
-                        <Typography variant="h4">${totalIngresos}</Typography>
-                    </CardContent>
-                </Card>
-            </Box>
-
-            {/* Botones de colores */}
-            <Box sx={{ marginTop: '40px' }}>
-                <Link to="/facturas" style={{ textDecoration: 'none' }}>
-                    <Button fullWidth variant="contained" sx={{ backgroundColor: '#2196f3', marginBottom: '10px' }}>
-                        Facturas
-                    </Button>
-                </Link>
-
-                <Link to="/clientes" style={{ textDecoration: 'none' }}>
-                    <Button fullWidth variant="contained" sx={{ backgroundColor: '#4caf50', marginBottom: '10px' }}>
-                        Clientes
-                    </Button>
-                </Link>
-
-                <Link to="/productos" style={{ textDecoration: 'none' }}>
-                    <Button fullWidth variant="contained" sx={{ backgroundColor: '#ff9800', marginBottom: '10px' }}>
-                        Productos
-                    </Button>
-                </Link>
-            </Box>
+            <Paper sx={{ padding: '20px', marginTop: '20px' }}>
+                <Typography variant="h6" gutterBottom>
+                    Distribución de Datos
+                </Typography>
+                <Pie data={pieData} style={{ maxWidth: '400px', margin: '0 auto' }} />
+            </Paper>
         </Box>
     );
 }
