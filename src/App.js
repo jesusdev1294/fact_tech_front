@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Inicio from './Inicio';
+import Dashboard from './Dashboard';
 import Facturas from './Facturas';
 import Clientes from './Clientes';
 import Productos from './Productos';
@@ -8,7 +8,7 @@ import Productos from './Productos';
 function App() {
     return (
         <Routes>
-            <Route path="/" element={<Inicio />} />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/facturas" element={<Facturas />} />
             <Route path="/clientes" element={<Clientes />} />
             <Route path="/productos" element={<Productos />} />
